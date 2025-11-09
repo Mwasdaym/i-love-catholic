@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Catholic Songs</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f2f6fa;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+    }
+    form {
+      max-width: 500px;
+      margin: 20px auto;
+      padding: 20px;
+      background: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    input[type="text"], input[type="file"], button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #2980b9;
+    }
+    .song-list {
+      max-width: 600px;
+      margin: 40px auto;
+    }
+    .song {
+      background: #fff;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+    audio {
+      width: 100%;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🎶 Catholic Songs</h1>
+
+  <form action="/upload" method="POST" enctype="multipart/form-data">
+    <input type="text" name="title" placeholder="Enter song title" required>
+    <input type="file" name="file" accept="audio/*,video/*" required>
+    <button type="submit">Upload Song</button>
+  </form>
+
+  <div class="song-list" id="songs"></div>
+
+  <script>
+    fetch('/songs-json')
+      .then(res => res.json())
+      .then(data => {
+        const container = document.getElementById('songs');
+        data.forEach(song => {
+          const div = document.createElement('div');
+          div.className = 'song';
+          div.innerHTML = `
+            <strong>${song.title}</strong><br>
+            <audio controls src="/uploads/${song.filename}"></audio><br>
+            <a href="/uploads/${song.filename}" download>Download</a>
+          `;
+          container.appendChild(div);
+        });
+      });
+  </script>
+
+</body>
+</html>
