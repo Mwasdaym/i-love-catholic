@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Catholic Songs</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; background: #f0f4f8; }
+    h1 { color: #333; }
+    form { margin-bottom: 30px; }
+    input, button { padding: 8px; margin: 5px 0; }
+    .song { background: #fff; padding: 10px; margin-bottom: 15px; border-radius: 5px; box-shadow: 0 0 5px #ccc; }
+    audio { width: 100%; margin-top: 5px; }
+  </style>
+</head>
+<body>
+  <h1>🎶 Catholic Songs</h1>
+
+  <form action="/upload" method="POST" enctype="multipart/form-data">
+    <input type="text" name="title" placeholder="Song title" required /><br>
+    <input type="file" name="file" required /><br>
+    <button type="submit">Upload Song</button>
+  </form>
+
+  <div id="songs"></div>
+
+  <script>
+    fetch('/songs-json')
+      .then(res => res.json())
+      .then(data => {
+        const container = document.getElementById('songs');
+        data.forEach(song => {
+          const div = document.createElement('div');
+          div.className = 'song';
+          div.innerHTML = `
+            <strong>${song.title}</strong><br>
+            <audio controls src="/uploads/${song.filename}"></audio><br>
+            <a href="/uploads/${song.filename}" download>Download</a>
+          `;
+          container.appendChild(div);
+        });
+      });
+  </script>
+</body>
+</html>
